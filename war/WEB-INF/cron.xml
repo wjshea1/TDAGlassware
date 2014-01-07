@@ -1,0 +1,7 @@
+<cronentries>
+<cron>
+<url>/tdacron</url>
+<description>Load lunch suggestions for all users at midnight</description>
+<schedule> ​every 2 minutes</schedule>
+</cron>
+</cronentries>
