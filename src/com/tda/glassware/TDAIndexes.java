@@ -37,8 +37,7 @@ public class TDAIndexes {
                     System.out.println( sb.toString());
                     Gson gson = new GsonBuilder().create();
                     Research r = gson.fromJson(sb.toString() , Research.class);
-                       render(r);
-                    return "";
+                    return render(r);
             }
 
         } catch (MalformedURLException e) {
@@ -85,8 +84,9 @@ public class TDAIndexes {
         // 2.3. Generate the output
 
         // Write output to the console
-        Writer consoleWriter = new OutputStreamWriter(System.out);
-        template.process(input, consoleWriter);
+        Writer strout = new StringWriter(); 
+       // Writer consoleWriter = new OutputStreamWriter(System.out);
+        template.process(input, strout);
 
         // For the sake of example, also write output into a file:
 //        Writer fileWriter = new FileWriter(new File("output.html"));
@@ -96,7 +96,7 @@ public class TDAIndexes {
 //            fileWriter.close();
 //        }
 
-        return "";
+        return strout.toString();
     }
 
 
