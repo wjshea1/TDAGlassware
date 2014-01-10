@@ -7,7 +7,10 @@ import javax.servlet.http.*;
 public class TDAGlassware2Servlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
-		resp.setContentType("text/plain");
-		resp.getWriter().println("Welcome to TDA Glassware - Coming Soon   ");
+		
+		
+		String html = TDAIndexes.getIndexes();
+		
+		resp.getWriter().append(html);
 	}
 }
