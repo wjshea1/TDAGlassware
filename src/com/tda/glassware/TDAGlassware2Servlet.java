@@ -10,7 +10,7 @@ public class TDAGlassware2Servlet extends HttpServlet {
 		
 		
 		String html = TDAIndexes.getIndexes();
-		
+		resp.setContentType("text/html; charset=utf-8");
 		resp.getWriter().append(html);
 	}
 }
