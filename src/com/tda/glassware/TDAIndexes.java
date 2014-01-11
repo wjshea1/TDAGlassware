@@ -1,18 +1,26 @@
 package com.tda.glassware;
 
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.tda.glassware.auth.AuthUtils;
 import com.tda.glassware.jsonobjects.High;
 import com.tda.glassware.jsonobjects.Research;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.services.mirror.Mirror;
+import com.google.api.services.mirror.Mirror.Timeline;
+import com.google.api.services.mirror.model.TimelineItem;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class TDAIndexes {
     public static String getIndexes(){
@@ -97,6 +105,20 @@ public class TDAIndexes {
 //        }
 
         return strout.toString();
+    }
+    
+    public static void insertAndSaveSimpleTextTimelineItem( HttpServletRequest req) throws IOException{
+    	String userId = SessionUtils.getUserId(req);
+    	Credential credential = AuthUtils.getCredential(userId);
+    	Mirror mirror = MirrorUtils.getMirror(req);
+    	
+    	Timeline timeline = mirror.timeline();
+    	TimelineItem timelineItem = new TimelineItem()
+    		.setHtml(getIndexes());
+    	
+    	TimelineItem tiResp = timeline.insert(timelineItem).execute();
+    	PageManager.setLastPageId(tiResp.getId(), userId);
+    	
     }
 
 
