@@ -22,7 +22,7 @@ public class MirrorUtils {
 		
 	}
 
-	private static Mirror getMirror(Credential credential) throws IOException {
+	public static Mirror getMirror(Credential credential) throws IOException {
 		
 		
 		return new Mirror.Builder(new UrlFetchTransport(), 

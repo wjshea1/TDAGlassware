@@ -120,6 +120,48 @@ public class TDAIndexes {
     	PageManager.setLastPageId(tiResp.getId(), userId);
     	
     }
+    // Override for user
+    public static void insertAndSaveSimpleTextTimelineItem( HttpServletRequest req, String userId) throws IOException{
+    	
+    	Credential credential = AuthUtils.getCredential(userId);
+    	Mirror mirror = MirrorUtils.getMirror(req);
+    	
+    	Timeline timeline = mirror.timeline();
+    	TimelineItem timelineItem = new TimelineItem()
+    		.setHtml(getIndexes());
+    	
+    	TimelineItem tiResp = timeline.insert(timelineItem).execute();
+    	PageManager.setLastPageId(tiResp.getId(), userId);
+    	
+    }
+    
+    public static void updateTimelineItem( HttpServletRequest req, String userId, String pageId) throws IOException {
+    	
+    	
+    	Credential credential = AuthUtils.getCredential(userId);
+    	Mirror mirror = MirrorUtils.getMirror(req);
+    	
+    	Timeline timeline = mirror.timeline();
+    	TimelineItem timelineItem = new TimelineItem().setHtml(getIndexes());
+    	//TimelineItem tiResp = timeline.update(pageId, timelineItem);
+    	
+    }
+    
+    public static TimelineItem getLastSavedTimelineItem( String userId )
+    	      throws IOException
+    	  {
+    	    Credential credential = AuthUtils.getCredential( userId );
+    	    Mirror mirror = MirrorUtils.getMirror( credential );
+    	    Timeline timeline = mirror.timeline();
+
+    	    // START:getLastSavedTimelineItem
+    	    String id = PageManager.getLastPageId( userId );
+
+    	    TimelineItem timelineItem = timeline.get( id ).execute();
+    	    // END:getLastSavedTimelineItem
+
+    	    return timelineItem;
+    	  }
 
 
 }
