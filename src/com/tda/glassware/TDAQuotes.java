@@ -21,11 +21,13 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.services.mirror.Mirror;
 import com.google.api.services.mirror.Mirror.Timeline;
+import com.google.api.services.mirror.model.MenuItem;
 import com.google.api.services.mirror.model.TimelineItem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tda.glassware.auth.AuthUtils;
 import com.tda.glassware.getquotes.GetQuotes;
+import com.tda.glassware.getquotes.Quotes;
 import com.tda.glassware.jsonobjects.Research;
 
 import freemarker.template.Configuration;
@@ -34,7 +36,7 @@ import freemarker.template.Version;
 
 public class TDAQuotes {
 	
-	public static String getQuotes(List<String> symbols){
+	public static TimelineItem getQuotes(List<String> symbols){
 		StringBuffer liSymbol = new StringBuffer();
 		for(String symb : symbols){
 			liSymbol.append(symb).append("|");
@@ -72,7 +74,7 @@ public class TDAQuotes {
 		
 	}
 	
-	public static String render(GetQuotes quotes) throws Exception{
+	public static TimelineItem render(GetQuotes quotes) throws Exception{
 
        
         Configuration cfg = new Configuration();
@@ -89,6 +91,11 @@ public class TDAQuotes {
 
         input.put("title", "WatchList");
         input.put("data", quotes);
+        
+        StringBuffer readoutText = new StringBuffer();
+        for(Quotes q: quotes.getQuotes()){
+        	readoutText.append(q.getName()).append(" Last Price ").append(q.getLastPrice()).append(" Change ").append(q.getChangeAmt()).append(" Change Percent ").append(q.getChangePct()).append("  ");
+        }
 
         freemarker.template.Template template = cfg.getTemplate("Watchlist.ftl");
 
@@ -96,7 +103,15 @@ public class TDAQuotes {
         Writer strout = new StringWriter(); 
         template.process(input, strout);
 
-        return strout.toString();
+        TimelineItem timelineItem = new TimelineItem().setHtml(strout.toString());
+        List<MenuItem> menuItems = new ArrayList<>();
+        MenuItem mi = new MenuItem();
+        mi.setAction("READ_ALOUD");
+        menuItems.add(mi);
+		timelineItem.setMenuItems(menuItems);
+        timelineItem.setSpeakableText(readoutText.toString());
+        
+        return timelineItem;
     }
 	
 	public static void main(String[] args) {
@@ -113,7 +128,6 @@ public class TDAQuotes {
 	    	
 	    	String userId = SessionUtils.getUserId(req);
 	    	String pageId = PageManager.getLastPageId(userId);
-	    	String bundleId = "TDAGlass"+UUID.randomUUID();
 	    	Credential credential = AuthUtils.getCredential(userId);
 	    	Mirror mirror = MirrorUtils.getMirror(req);
 	    	
@@ -122,12 +136,8 @@ public class TDAQuotes {
 			str.add("AMTD");
 			str.add("GOOG");
 			
-			String htmlText = getQuotes(str);
 	    	Timeline timeline = mirror.timeline();
-	    	TimelineItem timelineItem = new TimelineItem()
-	    		.setHtml(htmlText);
-	    	timelineItem.setBundleId(bundleId);
-	    	timelineItem.setIsBundleCover(true);
+	    	TimelineItem timelineItem =getQuotes(str);
 	    	
 	    	
 	    	if(pageId != null){
@@ -137,7 +147,7 @@ public class TDAQuotes {
 	        	PageManager.setLastPageId(tiResp.getId(), userId);
 	    	}
 	    	
-	    	return htmlText;
+	    	return timelineItem.getHtml();
 	    	
 	    }
 
