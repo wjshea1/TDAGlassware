@@ -10,13 +10,23 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>TDAGlassware2</servlet-name>
-		<url-pattern>/tdaglassware2</url-pattern>
+		<url-pattern>/TDAGlassware2</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>TDAGlassWL</servlet-name>
+		<servlet-class>com.tda.glassware.TDAGlassWLServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>TDAGlassWL</servlet-name>
+		<url-pattern>/TDAGlassWL</url-pattern>
+	</servlet-mapping>
+	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 	
-		<servlet>
+	<servlet>
 	    <servlet-name>oauth2callback</servlet-name>
 	    <servlet-class>com.tda.glassware.auth.OAuth2Servlet</servlet-class>
 	</servlet>
