@@ -107,17 +107,29 @@ public class TDAIndexes {
         return strout.toString();
     }
     
-    public static void insertAndSaveSimpleTextTimelineItem( HttpServletRequest req) throws IOException{
+    public static String insertAndSaveSimpleTextTimelineItem( HttpServletRequest req) throws IOException{
+    	
     	String userId = SessionUtils.getUserId(req);
+    	String pageId = PageManager.getLastPageId(userId);
+    	String bundleId = "TDAGlass"+UUID.randomUUID();
     	Credential credential = AuthUtils.getCredential(userId);
     	Mirror mirror = MirrorUtils.getMirror(req);
-    	
+    	String htmlText = getIndexes();
     	Timeline timeline = mirror.timeline();
     	TimelineItem timelineItem = new TimelineItem()
-    		.setHtml(getIndexes());
+    		.setHtml(htmlText);
+    	timelineItem.setBundleId(bundleId);
+    	timelineItem.setIsBundleCover(true);
     	
-    	TimelineItem tiResp = timeline.insert(timelineItem).execute();
-    	PageManager.setLastPageId(tiResp.getId(), userId);
+    	
+    	if(pageId != null){
+    		timeline.patch(pageId, timelineItem).execute();
+    	}else{
+    		TimelineItem tiResp = timeline.insert(timelineItem).execute();
+        	PageManager.setLastPageId(tiResp.getId(), userId);
+    	}
+    	
+    	return htmlText;
     	
     }
 

@@ -7,14 +7,11 @@ import javax.servlet.http.*;
 public class TDAGlassware2Servlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
-		
-		
-		String html = TDAIndexes.getIndexes();
+	
+		// Insert Page into user timeline
+		String html = TDAIndexes.insertAndSaveSimpleTextTimelineItem(req);
 		resp.setContentType("text/html; charset=utf-8");
 		resp.getWriter().append(html);
-		
-		// Insert Page into user timeline
-		TDAIndexes.insertAndSaveSimpleTextTimelineItem(req);
 	}
 	
 	

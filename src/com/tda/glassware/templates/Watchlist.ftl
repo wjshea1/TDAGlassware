@@ -1,0 +1,1 @@
+<article><section><table class=\"align-justify\"><tbody><#list data.quotes as index><tr><td>${index.symbol}</td><td>${index.lastPrice}</td><td class="<#if (index.changePct <0 )>red<#else>green</#if>" >${index.changeAmt} (${index.changePct}%)</td></tr></#list></tbody></table></section></article>
