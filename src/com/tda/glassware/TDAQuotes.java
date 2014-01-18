@@ -123,7 +123,6 @@ public class TDAQuotes {
 
 	}
 	
-	
 	 public static String insertAndSaveSimpleTextTimelineItem( HttpServletRequest req) throws IOException{
 	    	
 	    	String userId = SessionUtils.getUserId(req);
