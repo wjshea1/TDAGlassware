@@ -122,12 +122,12 @@ public class TDAIndexes {
     	timelineItem.setIsBundleCover(true);
     	
     	
-    	if(pageId != null){
-    		timeline.patch(pageId, timelineItem).execute();
-    	}else{
+//    	if(pageId != null){
+//    		timeline.patch(pageId, timelineItem).execute();
+//    	}else{
     		TimelineItem tiResp = timeline.insert(timelineItem).execute();
         	PageManager.setLastPageId(tiResp.getId(), userId);
-    	}
+//    	}
     	
     	return htmlText;
     	
